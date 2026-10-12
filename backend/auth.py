@@ -1,3 +1,5 @@
+from pathlib import Path
+from dotenv import load_dotenv
 import os
 import re
 import uuid
@@ -511,9 +513,16 @@ async def change_password(body: PasswordChange, request: Request):
     return {"ok": True}
 
 
+load_dotenv(Path(__file__).parent / ".env")
+ADMIN_EMAIL = (os.environ.get("ADMIN_EMAIL") or "").strip().lower()
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD") or ""
+if not ADMIN_EMAIL or not ADMIN_PASSWORD:
+    raise RuntimeError("ADMIN_EMAIL and ADMIN_PASSWORD must be set in backend/.env — refusing to start")
+
+
 async def seed_admin():
-    admin_email = os.environ.get("ADMIN_EMAIL", "admin@frasberg.com").lower()
-    admin_password = os.environ.get("ADMIN_PASSWORD", "LuchiiAdmin2026!")
+    admin_email = ADMIN_EMAIL
+    admin_password = ADMIN_PASSWORD
     existing = await db.users.find_one({"email": admin_email})
     if existing is None:
         await db.users.insert_one({

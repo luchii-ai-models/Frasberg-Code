@@ -607,3 +607,4 @@ See /app/memory/test_credentials.md (admin@frasberg.com / LuchiiAdmin2026!, doct
 ## Oct 2026 local run — see LOCAL_RUN.md
 - Enforced image_generation on /generate/image and video_generation on /generate/video (were unchecked: any valid key passed). Verified matrix e2e (create→edit PATCH→PERMISSION_MATRIX→CANONICAL_DEFAULTS→key test→legacy alias image_video_generation).
 - apps/gateway Node gateway broken on this branch (API mismatch with packages/luchii-api-keys); not running.
+- Removed hardcoded admin password fallback: backend/auth.py raises RuntimeError at import if ADMIN_EMAIL/ADMIN_PASSWORD missing or empty.

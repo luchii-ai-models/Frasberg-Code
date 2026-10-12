@@ -12,5 +12,5 @@
 - supervisor gateway/redis conf copy: /app/scripts/supervisor-gateway.conf
 ## Backlog
 - P0 reconcile apps/gateway with packages/luchii-api-keys (or decide gateway not needed)
-- P1 remove hardcoded ADMIN_PASSWORD fallback in backend/auth.py
+- DONE remove hardcoded ADMIN_PASSWORD fallback (backend refuses to start without ADMIN_EMAIL + ADMIN_PASSWORD)
 - P1 Deploy to frasberg.com (separate phase)
