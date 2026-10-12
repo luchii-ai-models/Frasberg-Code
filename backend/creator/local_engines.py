@@ -180,6 +180,34 @@ def _pipes():
     return _t2i, _i2i
 
 
+PHOTO_WARM_MIN_GB = 4.0
+
+
+def _mem_headroom_gb() -> float:
+    try:
+        limit = open("/sys/fs/cgroup/memory.max").read().strip()
+        if limit == "max":
+            return float("inf")
+        used = int(open("/sys/fs/cgroup/memory.current").read())
+        stat = dict(line.split() for line in open("/sys/fs/cgroup/memory.stat"))
+        return (int(limit) - used + int(stat.get("inactive_file", 0))) / 1e9
+    except OSError:
+        return float("inf")
+
+
+def _wait_for_platform_engines(timeout: int = 300):
+    # Measure headroom only after the platform voice engines finish loading.
+    try:
+        import voice_engine
+    except ImportError:
+        return
+    for _ in range(timeout // 5):
+        st = voice_engine.status()
+        if all(st[k]["status"] not in ("idle", "loading") for k in ("stt", "tts", "cloning")):
+            return
+        time.sleep(5)
+
+
 def warm_up():
     """Lightweight boot: pre-cache only the small Piper voice. Heavy engines
     (SD-Turbo, Shap-E, MusicGen, OpenVoice) load lazily on first use and only one
@@ -193,10 +221,20 @@ def warm_up():
         logger.exception("Luchii in-house engine warm-up failed")
     # Images and remixes are the main use, so the photo engine (~3GB) and the small region parser are kept warm.
     # _claim() still frees the photo engine before 3D/music load, so the one-heavy-model rule holds.
+    _wait_for_platform_engines()
+    headroom = _mem_headroom_gb()
+    if headroom < PHOTO_WARM_MIN_GB:
+        logger.warning("Only %.1fGB memory headroom: photo engine stays internal but loads on first use", headroom)
+        return
     try:
         with _heavy_lock:
             _claim("photo")
-            _photo_pipe()
+            try:
+                _photo_pipe()
+            except (ImportError, RuntimeError):
+                # transformers can be mid-import on another engine thread at boot; retry once it settles
+                time.sleep(20)
+                _photo_pipe()
         _parse_pipe()
         import luchii_face
         luchii_face.warm()

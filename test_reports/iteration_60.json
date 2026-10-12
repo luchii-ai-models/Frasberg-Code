@@ -1,0 +1,29 @@
+{
+  "summary": "Full backend + frontend regression for Iter60 Frasberg Creator import. Backend: 17/17 pytest tests pass in /app/backend/tests/test_iter60_frasberg_creator.py — covers creator root, shared platform auth on /api/creator/auth/me (401 unauth / 200 authed), separate creator register+login removed (404/405), authenticated generations/voice-takes/spaces CRUD, public showcase + chat/models + gpu/v1/engines, admin RBAC on /api/creator/engines/status & /gpu-admin/overview (403 for user, 200 for admin), and platform regression (/api/auth/me, /api/keys, image-generation permission matrix: video-only key -> 403, image key empty prompt -> 400). Frontend: /create renders Frasberg Creator shell with all 7 tabs (create, tools, models, templates, engines, features, capabilities); each creator-view-{tab} loads without crash; /studio also renders Frasberg Creator; /create/classic renders Classic Studio; all 9 Tools subroutes (/creator/video, tts, sts, voice-clone, audio, 3d, spaces, gallery, agent) load inside the Creator shell without blank screen; Image template click navigates to /create?tab=create&prompt=... and the Generator textarea is correctly prefilled (153 chars). Spaces: 'New space' button creates and opens editor at /creator/spaces/new. Navbar.jsx uses label 'Frasberg Creator' (no stale 'Creative Studio' anywhere in /app/frontend/src outside creator mock copy).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Spaces header on /creator/spaces", "issues": ["'New space' button wraps to two lines inside the pill — consider whitespace-nowrap"]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter60_frasberg_creator.py",
+    "/app/test_reports/pytest/iter60.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "CreatorRoutes.jsx hard-codes active='tools' for every subroute, including /creator/gallery and /creator/agent which also appear as explicit cards — fine but means the header always highlights Tools even when the user is deep inside e.g. SpaceEditor; consider deriving active from the route.",
+    "Many /creator/* subpages trigger 403 console errors on load (gated endpoints hit without the right permissions). Pages render fine but noisy; worth filtering 403 fetches or gating the client calls on role."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_iter60_frasberg_creator.py (new)"
+  ],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "test_credentials": "localtest@frasberg.com / LocalTest!2026x ; admin@frasberg.com / wFDbM063P_ck8jdeLMQ (from backend/.env ADMIN_PASSWORD)",
+  "seed_data_creation": "Test spaces are prefixed TEST_space_* and deleted at end of test. One space 'My space' may be left over from the UI create flow test on /creator/spaces/new (editor opens before persisting).",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Pytest file is reusable. Admin password is read from /app/backend/.env ADMIN_PASSWORD directly in the test; update if rotated. Permission payload for /api/keys must be a dict with level values from PERMISSION_LEVELS=('no_access','read','write','access'), not a list. Did NOT trigger heavy generation jobs (image/video/tts/3d) per instructions — only routing/auth/CRUD verified."
+}

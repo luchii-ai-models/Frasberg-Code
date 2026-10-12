@@ -2143,8 +2143,7 @@ async def creator_startup():
     await db.spaces.create_index([("user_id", 1), ("updated_at", -1)])
     await frasberg_gpu.ensure_indexes()
     await _resume_interrupted_jobs()
-    if os.environ.get("CREATOR_WARMUP") == "1":
-        asyncio.get_running_loop().run_in_executor(None, local_engines.warm_up)
+    asyncio.get_running_loop().run_in_executor(None, local_engines.warm_up)
     asyncio.create_task(media_store.activate_loop(db, local_engines.preview))
     await aws_gpu.load_settings()
     base = os.environ.get("FRASBERG_PUBLIC_URL", "").rstrip("/")

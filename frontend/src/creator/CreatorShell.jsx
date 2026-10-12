@@ -5,12 +5,8 @@ import { brand } from "./mock";
 
 export const CREATOR_TABS = [
   { id: "create", label: "Create" },
-  { id: "tools", label: "Tools" },
+  { id: "tools", label: "Features & Tools" },
   { id: "models", label: "Models" },
-  { id: "templates", label: "Templates" },
-  { id: "engines", label: "Engines" },
-  { id: "features", label: "Features" },
-  { id: "capabilities", label: "Capabilities" },
 ];
 
 export default function CreatorShell({ active, children }) {
