@@ -2114,6 +2114,21 @@ app.middleware("http")(routes_shield.shield_middleware)
 async def _start_shield_digest():
     asyncio.create_task(routes_shield.digest_scheduler())
 
+import sys
+sys.path.append(str(ROOT_DIR / "creator"))
+import creator_app
+
+app.include_router(creator_app.api)
+app.include_router(creator_app.frasberg_gpu.router)
+
+
+@app.on_event("startup")
+async def _start_creator():
+    try:
+        await creator_app.creator_startup()
+    except Exception:
+        logger.exception("Frasberg Creator startup failed — creator features degraded")
+
 app.include_router(api_router)
 
 _PLATFORM_HOSTS = ("emergentagent.com", "frasberg", "localhost", "127.0.0.1")

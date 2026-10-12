@@ -69,6 +69,8 @@ import { AscensionBanner } from "./components/site/AscensionBanner";
 import { CommandPalette } from "./components/site/CommandPalette";
 import FrasbergOS from "./pages/FrasbergOS";
 import CreativeStudio from "./pages/CreativeStudio";
+import FrasbergCreator from "./creator/FrasbergCreator";
+import CreatorRoutes from "./creator/CreatorRoutes";
 import SecurityShield from "./pages/SecurityShield";
 import ShieldDashboard from "./pages/ShieldDashboard";
 import DocsHub from "./pages/DocsHub";
@@ -131,7 +133,9 @@ function App() {
               <Route path="/database" element={<AuthGate><DatabaseManager /></AuthGate>} />
               <Route path="/security-shield" element={<SecurityShield />} />
               <Route path="/shield-dashboard" element={<AuthGate><ShieldDashboard /></AuthGate>} />
-              <Route path="/create" element={<AuthGate><CreativeStudio /></AuthGate>} />
+              <Route path="/create" element={<AuthGate><FrasbergCreator /></AuthGate>} />
+              <Route path="/create/classic" element={<AuthGate><CreativeStudio /></AuthGate>} />
+              <Route path="/creator/*" element={<AuthGate><CreatorRoutes /></AuthGate>} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/admin/mesh" element={<MeshControlCenter />} />
@@ -152,7 +156,7 @@ function App() {
               <Route path="/games" element={<GamesLibrary />} />
               <Route path="/games/profile" element={<PlayerProfile />} />
               <Route path="/games/play/:gameId" element={<GamePlayerPage />} />
-              <Route path="/studio" element={<AuthGate><CreativeStudio /></AuthGate>} />
+              <Route path="/studio" element={<AuthGate><FrasbergCreator /></AuthGate>} />
               <Route path="/visual-studio" element={<VisualStudio />} />
               <Route path="/studio/creatures" element={<CreatureLibrary />} />
               <Route path="/studio/characters" element={<CharacterCreator />} />

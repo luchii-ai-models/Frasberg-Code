@@ -251,7 +251,7 @@ export default function CreativeStudio() {
           <Link to="/" className="flex items-center gap-2.5" data-testid="studio-home-link">
             <ArrowLeft size={16} style={{ color: C.muted }} />
             <img src="/frasberg-mark-circle.png" alt="Frasberg" className="h-8 w-8 rounded-full" />
-            <span className="font-display text-lg font-700 tracking-tight">Creative Studio</span>
+            <span className="font-display text-lg font-700 tracking-tight">Classic Studio</span>
           </Link>
           <div className="flex items-center gap-2">
             <button onClick={toggleTheme} data-testid="studio-theme-toggle" aria-label="Toggle theme"

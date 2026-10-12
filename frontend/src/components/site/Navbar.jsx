@@ -28,7 +28,7 @@ const EXPLORE_GROUPS = [
   {
     title: "Build",
     items: [
-      { label: "Creative Studio", to: "/studio" },
+      { label: "Frasberg Creator", to: "/create" },
       { label: "Website Builder", to: "/website-builder" },
       { label: "App Builder", to: "/app-builder" },
       { label: "Game Builder", to: "/game-builder" },
@@ -200,7 +200,7 @@ export default function Navbar() {
               <Link to="/game-builder" onClick={() => setOpen(false)} className="py-2 text-sm text-lux-text2 hover:text-lux-text">Game Builder</Link>
               <Link to="/games" onClick={() => setOpen(false)} className="py-2 text-sm text-lux-text2 hover:text-lux-text">Games</Link>
               <Link to="/os" onClick={() => setOpen(false)} className="py-2 text-sm text-lux-text2 hover:text-lux-text">FrasbergOS</Link>
-              <Link to="/create" onClick={() => setOpen(false)} className="py-2 text-sm text-lux-text2 hover:text-lux-text">Creative Studio</Link>
+              <Link to="/create" onClick={() => setOpen(false)} className="py-2 text-sm text-lux-text2 hover:text-lux-text">Frasberg Creator</Link>
               <Link to="/dashboard" onClick={() => setOpen(false)} className="py-2 text-sm text-lux-text2 hover:text-lux-text">Developers</Link>
             </div>
             {EXPLORE_GROUPS.map((g) => (
